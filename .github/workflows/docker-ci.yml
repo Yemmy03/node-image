@@ -5,8 +5,8 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: eu-east-1
-  ECR_REPOSITORY: node-image    # your ECR repo name
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: node-image
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -27,6 +27,11 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Ensure ECR repository exists
+        run: |
+          aws ecr describe-repositories --repository-names ${{ env.ECR_REPOSITORY }} || \
+          aws ecr create-repository --repository-name ${{ env.ECR_REPOSITORY }}
 
       - name: Build Docker image
         run: |
