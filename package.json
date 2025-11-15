@@ -1,0 +1,14 @@
+{
+  "name": "yemmy-node-project",
+  "version": "1.0.0",
+  "description": "A simple Node.js app for DevOps CI/CD testing",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
