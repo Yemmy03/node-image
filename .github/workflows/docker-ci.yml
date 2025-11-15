@@ -1,0 +1,53 @@
+name: Build and Push to ECR
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: eu-east-1
+  ECR_REPOSITORY: node-image    # your ECR repo name
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+
+      - name: Tag image
+        run: |
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG"
+          docker tag $ECR_REPOSITORY:$IMAGE_TAG $IMAGE_URI
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      - name: Push to ECR
+        run: |
+          docker push $IMAGE_URI
+
+      - name: Write IMAGE_URI to image file
+        run: |
+          echo "$IMAGE_URI" > image.txt
+
+      - name: Upload image file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-file
+          path: image.txt
