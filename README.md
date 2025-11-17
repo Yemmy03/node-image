@@ -28,7 +28,7 @@ Before pushing any image, I check if the target ECR repository exists. If it doe
 I use the docker build command to build the image from my Dockerfile. The image is tagged with the repository name and the commit SHA to ensure it is distinct.
 
 ### 6. Tag the image for ECR  
-I construct the full image URI which includes my AWS registry address, the repository name, and the image tag. I tag the local image with this full URI and store it in the GitHub environment for later use.
+I construct the full image URI (an image URI is the full address that uniquely points to a specific Docker image stored in a registry) which includes my AWS registry address, the repository name, and the image tag. I tag the local image with this full URI and store it in the GitHub environment for later use.
 
 ### 7. Push the image to ECR  
 I push the tagged image to ECR using the docker push command. This uploads the container image and makes it available for deployment.
