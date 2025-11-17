@@ -25,7 +25,7 @@ I authenticate Docker to Amazon ECR using the official login action. This gives 
 Before pushing any image, I check if the target ECR repository exists. If it does not exist, I create it. This prevents the workflow from failing because of missing infrastructure.
 
 ### 5. Build the Docker image  
-I use the docker build command to build the image from my Dockerfile. The image is tagged with the repository name and the commit SHA to ensure uniqueness.
+I use the docker build command to build the image from my Dockerfile. The image is tagged with the repository name and the commit SHA to ensure it is distinct.
 
 ### 6. Tag the image for ECR  
 I construct the full image URI which includes my AWS registry address, the repository name, and the image tag. I tag the local image with this full URI and store it in the GitHub environment for later use.
